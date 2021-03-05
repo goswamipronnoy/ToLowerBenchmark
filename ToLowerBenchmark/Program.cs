@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 
@@ -9,7 +11,8 @@ namespace ToLowerBenchmark
     {
         static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<ToLowerBenchmark>();
+            //var summary = BenchmarkRunner.Run<ToLowerBenchmark>();
+            var summary = BenchmarkRunner.Run<ThreadSleepBenchmark>();
         }
     }
 
@@ -34,6 +37,23 @@ namespace ToLowerBenchmark
 
         [Benchmark]
         public string ToLowerInvariant() => this.Data.ToLowerInvariant();
+
+    }
+
+    public class ThreadSleepBenchmark
+    {
+        private int delayDuration;
+
+        public ThreadSleepBenchmark()
+        {
+            this.delayDuration = 1;
+        }
+
+        [Benchmark]
+        public void ThreadSleep() => Thread.Sleep(this.delayDuration);
+
+        [Benchmark]
+        public void TaskDelay() => Task.Delay(this.delayDuration).Wait();
 
     }
 }
